@@ -1,0 +1,24 @@
+#UNC Chapel Hill
+import json
+import requests
+import pandas as pd
+import numpy as np
+def players():
+    response = requests.get('http://api.sportradar.us/ncaamb-t3/seasontd/2016/REG/teams/e9ca48b2-00ba-41c0-a02b-6885a2da1ff1/statistics.json?api_key=ekndhncqf3nub6texh9gp2k6')
+    data_dict = response.json()
+    players = data_dict['players']
+    return players
+players = players()
+players_df = pd.DataFrame(players)
+players_df
+
+players_df.to_html()
+
+import smtplib  #import smtplib in order to email
+smtpObj = smtplib.SMTP_SSL('smtp.sendgrid.net', 465) #went to sendgrid
+smtpObj.login('apikey', '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') #API key inserted with username created
+
+smtpObj.sendmail(input("Enter your syr email address: "), input('Insert syr email address to send to: '), #enter email address to send to 
+'Subject: To-do-List\n' #Insert message that you want in the subject
+'\n' 'Hi ' + (players_df.to_html())) #Insert message you want in the body
+smtpObj.quit() #close smtp
