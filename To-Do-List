@@ -1,0 +1,65 @@
+#TO-DO-LIST
+#import smtplib in order to send To-do-List through email
+import smtplib  
+
+#defintion that has all print statements
+def print_options():
+    print("A - Add task to To-do-List")
+    print("P - Print To-do-List")
+    print("R - Remove task from To-do-List")
+    print("Q - Quit To-do-List")
+    return
+
+# prompts for a new item then adds it to the To-do-List
+# only when it does not exist
+def add_task(To_do_List):
+    text = input("Enter task to add: ")
+    if text not in To_do_List:
+        To_do_List.append(text)
+    elif text in To_do_List:
+        print("%s already in the list!" % (text))
+    return To_do_List
+
+# sorts then prints the shopping list
+def print_list(To_do_List):
+    To_do_List.sort()
+    print(To_do_List)
+    return To_do_List
+
+# prompts for an item then removes it from the shopping list
+# only when it exists
+def remove_list(To_do_List):
+    text = input("Enter Item to Remove: ")
+    if text in To_do_List:
+        To_do_List.remove(text)
+    else:
+        print("%s is not in the list!" % (text))
+    return To_do_List       
+
+
+#Main Program
+To_do_List = []
+while True:
+    print_options()
+    choice = input("Enter choice: ").upper()
+    if choice == 'A':
+        To_do_List = add_task(To_do_List)
+    elif choice == 'P':
+        To_do_List = print_list(To_do_List)
+    elif choice == 'R':
+        To_do_List = remove_list(To_do_List)
+    elif choice == "Q":
+        break
+    else:
+        print('ERROR: %s is not a menu option' % (choice))
+        
+#SEND EMAIL        
+smtpObj = smtplib.SMTP_SSL('smtp.sendgrid.net', 465) #went to sendgrid to get key and 465 is the port
+smtpObj.login('apikey', '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') #API key inserted with username created
+smtpObj.sendmail(input('Insert email address to send to: '), input('Insert email address to send to: '), #enter email address to send to 
+'Subject: To-do-List\n' #Insert message that you want in the subject
+'\n To-do-List\n'#Insert message you want in the body. Newline= \n
+'\n' + str(To_do_List)) #Insert message you want in the body
+smtpObj.quit() #close smtp
+
+
